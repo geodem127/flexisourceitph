@@ -32,7 +32,6 @@ const LoginPage = () => {
         formik.values.password
       );
 
-      console.log("onSubmit res", res);
       if (res?.status === "failed") {
         setErrorMessage(res?.data?.name);
       }
@@ -40,11 +39,10 @@ const LoginPage = () => {
   });
 
   useEffect(() => {
-    console.log("isAuthenticated", { isAuthenticated, loading });
     if (!loading && isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated, loading]);
+  }, [isAuthenticated, loading, navigate]);
 
   return (
     <Container
@@ -128,5 +126,4 @@ const LoginPage = () => {
     </Container>
   );
 };
-
 export default LoginPage;

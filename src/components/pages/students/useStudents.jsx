@@ -22,7 +22,6 @@ const useStudents = () => {
         query: listStudents,
       });
 
-      console.log(" getStudents |  RESPONSE: ", res);
       sData = {
         status: "success",
         data: res?.data?.listStudents?.items,

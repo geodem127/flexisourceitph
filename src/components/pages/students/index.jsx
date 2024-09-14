@@ -154,7 +154,6 @@ const StudenstPage = () => {
           </ContentHeader>
           <ContentContainer>
             <DataTable
-              isLoading={refreshInProgress || isLoading}
               students={studentRows}
               deleteStudent={handleDeleteStudent}
             />
