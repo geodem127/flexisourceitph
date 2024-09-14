@@ -1,0 +1,1 @@
+import{p as o,j as t,B as a,aa as e}from"./index-C_JhfKgS.js";const i=({isLoading:s=!1,label:p="",...r})=>t.jsxs(a,{disabled:s,...r,children:[s&&t.jsx(e,{sx:{position:"absolute",width:"25px!important",height:"25px!important"}}),p||"Submit"]});i.propTypes={isLoading:o.PropTypes.bool,label:o.PropTypes.string};export{i as L};
