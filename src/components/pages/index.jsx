@@ -74,6 +74,13 @@ const PageLayout = ({ children }) => {
               Students
             </NavLinkButton>
 
+            <NavLinkButton component={NavLink} to="/coding-challenge">
+              Coding Challenge
+            </NavLinkButton>
+            <NavLinkButton component={NavLink} to="/xxx">
+              Page not found
+            </NavLinkButton>
+
             <Divider style={{ width: "100%" }} />
             <Box px={"1.5rem"} mt={"2rem"} sx={{ width: "100%" }}>
               <LoadingButton
