@@ -14,6 +14,7 @@ import { Box, IconButton, styled, useTheme } from "@mui/material";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 const columns = [
+  { id: "id", label: "ID", minWidth: 50 },
   { id: "student_id", label: "Student ID", minWidth: 100 },
   { id: "last_name", label: "Last Name", minWidth: 170 },
   { id: "first_name", label: "First Name", minWidth: 170 },
@@ -116,8 +117,11 @@ export default function DataTable({ students, deleteStudent }) {
             <TableBody sx={{ overflow: "hidden" }}>
               {students
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                ?.map((row) => (
+                ?.map((row, index) => (
                   <StyledTableRow key={row?.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {index + 1}
+                    </StyledTableCell>
                     <StyledTableCell component="th" scope="row">
                       {row?.student_id}
                     </StyledTableCell>

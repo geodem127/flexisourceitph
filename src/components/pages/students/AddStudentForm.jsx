@@ -55,7 +55,8 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentFormSchema = Yup.object({
-  student_id: Yup.string().required("Required"),
+  //   student_id: Yup.string().required("Required"),
+  student_id: Yup.string(),
   first_name: Yup.string().required("First name is required"),
   last_name: Yup.string().required("Last name is required"),
   email: Yup.string()
@@ -92,6 +93,11 @@ export default function AddStudentForm({
       const newStudent = {
         id: studentUUID,
         ...formik.values,
+        student_id: `${formik.values.first_name.substring(0, 3)}${
+          formik.values.last_name
+        }`
+          .trim()
+          .toLocaleLowerCase(),
       };
 
       await createNewStudent({ ...newStudent });
@@ -116,7 +122,7 @@ export default function AddStudentForm({
         component="div"
         sx={{ mb: 2, textAlign: "left" }}
       >
-        Add New Student
+        Create New Student
       </Typography>
       <FormikProvider value={formik}>
         <Form
@@ -138,10 +144,21 @@ export default function AddStudentForm({
               error={Boolean(
                 formik.touched.student_id && formik.errors.student_id
               )}
-              value={formik.values.student_id}
+              value={`${formik.values.first_name.substring(0, 3)}${
+                formik.values.last_name
+              }`
+                .trim()
+                .toLocaleLowerCase()}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={formik.touched.student_id && formik.errors.student_id}
+              focused
+              disabled
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
             />
           </Box>
           <Box className="formRow" columnGap={2}>

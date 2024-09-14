@@ -9,12 +9,7 @@ import PropTypes from "prop-types";
 
 import awsconfig from "../../aws-exports";
 import { Amplify } from "aws-amplify";
-import {
-  signOut,
-  signIn,
-  getCurrentUser,
-  fetchAuthSession,
-} from "aws-amplify/auth";
+import { signOut, signIn, getCurrentUser } from "aws-amplify/auth";
 
 import "@aws-amplify/ui-react/styles.css";
 
@@ -27,8 +22,6 @@ const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 
-  //   const { userData, login, loading: loginLoading } = useLogin();
-
   const authenticateUser = useCallback(async () => {
     setLoading(true);
 
@@ -37,43 +30,16 @@ const AuthProvider = ({ children }) => {
       if (!currentUserData) return destroyAuth();
       setUser(currentUserData);
       setIsAuthenticated(true);
-      console.log(
-        `currentUserData: ${JSON.stringify(currentUserData, null, 3)}`
-      );
     } catch (err) {
       console.log(err);
       destroyAuth();
     }
 
     setLoading(false);
-  }, [isAuthenticated]);
-
-  const getCurrentSession = async () => {
-    try {
-      const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-      console.log("accessToken, idToken ", {
-        accessToken,
-        idToken,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  }, []);
 
   const userLogin = async (username, password) => {
     setLoading(true);
-    // try {
-    //   const { ...res } = await signIn({
-    //     username,
-    //     password,
-    //   });
-
-    //   console.log("userLogin signInResponse", {
-    //     ...res,
-    //   });
-    // } catch (error) {
-    //   console.log("error signing in", error);
-    // }
 
     let loginResponse = null;
 
@@ -117,23 +83,6 @@ const AuthProvider = ({ children }) => {
 
     setLoading(false);
   };
-
-  //   const currentAuthenticatedUser = async () => {
-  //     try {
-  //       const { username, userId, signInDetails } = await getCurrentUser();
-  //       console.log(`The username: ${username}`);
-  //       console.log(`The userId: ${userId}`);
-  //       console.log(`The signInDetails: ${signInDetails}`);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     if (loginLoading) return;
-
-  //     authenticateUser();
-  //   }, [loginLoading, authenticateUser]);
 
   useEffect(() => {
     authenticateUser();
