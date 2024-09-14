@@ -25,6 +25,12 @@ const columns = [
     minWidth: 100,
   },
   {
+    id: "createdAt",
+    label: "Date Created",
+    minWidth: 100,
+  },
+
+  {
     id: "action",
     label: "Action",
     minWidth: 150,
@@ -132,7 +138,14 @@ export default function DataTable({ students, deleteStudent }) {
                       {row?.first_name}
                     </StyledTableCell>
                     <StyledTableCell align="left">{row?.email}</StyledTableCell>
-                    <StyledTableCell align="left">{row?.dob}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row?.dob ? new Date(row.dob).toLocaleDateString() : ""}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row?.createdAt
+                        ? new Date(row.createdAt).toLocaleDateString()
+                        : ""}
+                    </StyledTableCell>
                     <StyledTableCell align="center">
                       <IconButton
                         size="small"

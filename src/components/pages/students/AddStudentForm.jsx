@@ -134,8 +134,14 @@ export default function AddStudentForm({
             formik.handleSubmit(e);
           }}
         >
-          <Box className="formRow" columnGap={2}>
+          <Box className="formRow">
             <TextField
+              sx={{
+                height: 0,
+                overflow: "hidden",
+                position: "relative",
+                minHeight: 0,
+              }}
               id="student_id"
               name="student_id"
               label="Student ID"
@@ -150,9 +156,9 @@ export default function AddStudentForm({
                 .trim()
                 .toLocaleLowerCase()}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              helperText={formik.touched.student_id && formik.errors.student_id}
-              focused
+              //   onBlur={formik.handleBlur}
+              //   helperText={formik.touched.student_id && formik.errors.student_id}
+              //   focused
               disabled
               slotProps={{
                 input: {
@@ -206,6 +212,7 @@ export default function AddStudentForm({
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                disableFuture
                 label="Date of Birth"
                 id="dob"
                 name="dob"
