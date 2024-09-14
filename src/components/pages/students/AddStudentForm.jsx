@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PropTypes } from "prop-types";
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-// import { DatePicker } from "@mui/x-date-pickers";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -17,8 +17,6 @@ import { useFormik, Form, FormikProvider } from "formik";
 
 import * as Yup from "yup";
 import { generateUUID } from "../../../utils/uuidGenerator";
-
-// /student_id, first_name  last_name, email, dob
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -57,7 +55,8 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentFormSchema = Yup.object({
-  student_id: Yup.string().required("Required"),
+  //   student_id: Yup.string().required("Required"),
+  student_id: Yup.string(),
   first_name: Yup.string().required("First name is required"),
   last_name: Yup.string().required("Last name is required"),
   email: Yup.string()
@@ -69,11 +68,14 @@ const StudentFormSchema = Yup.object({
     .max(new Date(), "Date of birth cannot be in the future"),
 });
 
-export default function AddStudentForm({ onClose }) {
+export default function AddStudentForm({
+  onClose,
+  createNewStudent,
+  isLoading,
+}) {
   const [submitError, setSubmitError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState("");
-  //   const studentUUID = generateUUID();
+  const studentUUID = generateUUID();
 
   const formik = useFormik({
     initialValues: {
@@ -85,30 +87,21 @@ export default function AddStudentForm({ onClose }) {
     },
     validationSchema: StudentFormSchema,
 
-    onSubmit: (values) => {
+    onSubmit: async () => {
       setSubmitError("");
-      setLoading(true);
 
-      console.log("formik | values: ", { formik, values });
+      const newStudent = {
+        id: studentUUID,
+        ...formik.values,
+        student_id: `${formik.values.first_name.substring(0, 3)}${
+          formik.values.last_name
+        }`
+          .trim()
+          .toLocaleLowerCase(),
+      };
 
-      //   try {
-      //     const submitStatus = await addNewStudent({
-      //        id: studentUUID,
-      //       ...formik.values,
-      //     });
-
-      //     if (submitStatus.status === "error") {
-      //       setSubmitError(submitStatus.description);
-      //     }
-      //   } catch (err) {
-      //     setSubmitError(err.message);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      setTimeout(() => {
-        setLoading(false);
-        onClose();
-      }, 5000);
+      await createNewStudent({ ...newStudent });
+      onClose();
     },
   });
   const validateDate = (event, val = null) => {
@@ -129,7 +122,7 @@ export default function AddStudentForm({ onClose }) {
         component="div"
         sx={{ mb: 2, textAlign: "left" }}
       >
-        Add New Student
+        Create New Student
       </Typography>
       <FormikProvider value={formik}>
         <Form
@@ -141,8 +134,14 @@ export default function AddStudentForm({ onClose }) {
             formik.handleSubmit(e);
           }}
         >
-          <Box className="formRow" columnGap={2}>
+          <Box className="formRow">
             <TextField
+              sx={{
+                height: 0,
+                overflow: "hidden",
+                position: "relative",
+                minHeight: 0,
+              }}
               id="student_id"
               name="student_id"
               label="Student ID"
@@ -151,10 +150,21 @@ export default function AddStudentForm({ onClose }) {
               error={Boolean(
                 formik.touched.student_id && formik.errors.student_id
               )}
-              value={formik.values.student_id}
+              value={`${formik.values.first_name.substring(0, 3)}${
+                formik.values.last_name
+              }`
+                .trim()
+                .toLocaleLowerCase()}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              helperText={formik.touched.student_id && formik.errors.student_id}
+              //   onBlur={formik.handleBlur}
+              //   helperText={formik.touched.student_id && formik.errors.student_id}
+              //   focused
+              disabled
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
             />
           </Box>
           <Box className="formRow" columnGap={2}>
@@ -202,6 +212,7 @@ export default function AddStudentForm({ onClose }) {
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                disableFuture
                 label="Date of Birth"
                 id="dob"
                 name="dob"
@@ -239,7 +250,7 @@ export default function AddStudentForm({ onClose }) {
               variant="outlined"
               color="inherit"
               size="large"
-              disabled={loading}
+              disabled={isLoading}
               onClick={onClose}
             >
               Cancel
@@ -250,13 +261,13 @@ export default function AddStudentForm({ onClose }) {
               color="primary"
               size="large"
               className="studentFormSubmit"
-              disabled={loading}
+              disabled={isLoading}
               onClick={() => {
                 validateDate();
                 formik.handleSubmit();
               }}
             >
-              {loading && (
+              {isLoading && (
                 <CircularProgress
                   sx={{
                     position: "absolute",
@@ -276,4 +287,6 @@ export default function AddStudentForm({ onClose }) {
 
 AddStudentForm.propTypes = {
   onClose: PropTypes.func.isRequired,
+  createNewStudent: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };

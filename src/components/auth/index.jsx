@@ -6,7 +6,6 @@ import {
   useCallback,
 } from "react";
 import PropTypes from "prop-types";
-import useLogin from "./Login";
 
 import awsconfig from "../../aws-exports";
 import { Amplify } from "aws-amplify";
@@ -23,8 +22,6 @@ const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 
-  //   const { userData, login, loading: loginLoading } = useLogin();
-
   const authenticateUser = useCallback(async () => {
     setLoading(true);
 
@@ -33,37 +30,51 @@ const AuthProvider = ({ children }) => {
       if (!currentUserData) return destroyAuth();
       setUser(currentUserData);
       setIsAuthenticated(true);
-      console.log(
-        `currentUserData: ${JSON.stringify(currentUserData, null, 3)}`
-      );
     } catch (err) {
       console.log(err);
       destroyAuth();
     }
 
     setLoading(false);
-  }, [isAuthenticated]);
+  }, []);
 
   const userLogin = async (username, password) => {
     setLoading(true);
-    try {
-      const { isSignedIn, nextStep } = await signIn({ username, password });
-      console.log("userLogin isSignedIn|nextStep", { isSignedIn, nextStep });
-    } catch (error) {
-      console.log("error signing in", error);
-    }
-    authenticateUser();
-    setLoading(false);
+
+    let loginResponse = null;
+
+    await signIn({
+      username,
+      password,
+    })
+      .then((res) => {
+        loginResponse = {
+          status: "success",
+          data: { ...res },
+        };
+      })
+      .catch((err) => {
+        loginResponse = {
+          status: "failed",
+          data: err,
+        };
+      })
+      .finally(() => {
+        authenticateUser();
+        setLoading(false);
+      });
+    return loginResponse;
   };
 
   const userLogout = async () => {
+    setLoading(true);
     try {
       await signOut({ global: true });
     } catch (error) {
       console.log("error signing out: ", error);
     }
     authenticateUser();
-    //   destroyAuth();
+    setLoading(false);
   };
 
   const destroyAuth = () => {
@@ -72,23 +83,6 @@ const AuthProvider = ({ children }) => {
 
     setLoading(false);
   };
-
-  //   const currentAuthenticatedUser = async () => {
-  //     try {
-  //       const { username, userId, signInDetails } = await getCurrentUser();
-  //       console.log(`The username: ${username}`);
-  //       console.log(`The userId: ${userId}`);
-  //       console.log(`The signInDetails: ${signInDetails}`);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     if (loginLoading) return;
-
-  //     authenticateUser();
-  //   }, [loginLoading, authenticateUser]);
 
   useEffect(() => {
     authenticateUser();
@@ -99,7 +93,7 @@ const AuthProvider = ({ children }) => {
       value={{
         loading,
         isAuthenticated,
-        // user,
+        user,
         userLogin,
         userLogout,
       }}
