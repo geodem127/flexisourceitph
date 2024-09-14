@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-// import { DatePicker } from "@mui/x-date-pickers";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -17,8 +17,8 @@ import { useFormik, Form, FormikProvider } from "formik";
 
 import * as Yup from "yup";
 import { generateUUID } from "../../../utils/uuidGenerator";
-
-// /student_id, first_name  last_name, email, dob
+// import useStudents from "./useStudents";
+// import toast from "react-hot-toast";
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -69,11 +69,17 @@ const StudentFormSchema = Yup.object({
     .max(new Date(), "Date of birth cannot be in the future"),
 });
 
-export default function AddStudentForm({ onClose }) {
+export default function AddStudentForm({
+  onClose,
+  createNewStudent,
+  isLoading,
+}) {
   const [submitError, setSubmitError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [dateError, setDateError] = useState("");
-  //   const studentUUID = generateUUID();
+  const studentUUID = generateUUID();
+
+  //   const { isLoading, createNewStudentResponse, getStudents, createNewStudent } =
+  //     useStudents();
 
   const formik = useFormik({
     initialValues: {
@@ -85,30 +91,16 @@ export default function AddStudentForm({ onClose }) {
     },
     validationSchema: StudentFormSchema,
 
-    onSubmit: (values) => {
+    onSubmit: async () => {
       setSubmitError("");
-      setLoading(true);
 
-      console.log("formik | values: ", { formik, values });
+      const newStudent = {
+        id: studentUUID,
+        ...formik.values,
+      };
 
-      //   try {
-      //     const submitStatus = await addNewStudent({
-      //        id: studentUUID,
-      //       ...formik.values,
-      //     });
-
-      //     if (submitStatus.status === "error") {
-      //       setSubmitError(submitStatus.description);
-      //     }
-      //   } catch (err) {
-      //     setSubmitError(err.message);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      setTimeout(() => {
-        setLoading(false);
-        onClose();
-      }, 5000);
+      await createNewStudent({ ...newStudent });
+      onClose();
     },
   });
   const validateDate = (event, val = null) => {
@@ -121,6 +113,21 @@ export default function AddStudentForm({ onClose }) {
     if (hasFormikError && !dateIsValid) return setDateError(formik.errors.dob);
     setDateError("");
   };
+
+  //   useEffect(() => {
+  //     console.log(" API.graphql RESPONSE: ", createNewStudentResponse);
+  //     if (isLoading) return;
+
+  //     if (createNewStudentResponse?.status === "success") {
+  //       toast.success(
+  //         `Successfully created student: ${createNewStudentResponse?.data?.id}`
+  //       );
+  //     }
+
+  //     if (createNewStudentResponse?.status === "failed") {
+  //       toast.error(`Failed to create student`);
+  //     }
+  //   }, [createNewStudentResponse, isLoading]);
 
   return (
     <FormContainer>
@@ -239,7 +246,7 @@ export default function AddStudentForm({ onClose }) {
               variant="outlined"
               color="inherit"
               size="large"
-              disabled={loading}
+              disabled={isLoading}
               onClick={onClose}
             >
               Cancel
@@ -250,13 +257,13 @@ export default function AddStudentForm({ onClose }) {
               color="primary"
               size="large"
               className="studentFormSubmit"
-              disabled={loading}
+              disabled={isLoading}
               onClick={() => {
                 validateDate();
                 formik.handleSubmit();
               }}
             >
-              {loading && (
+              {isLoading && (
                 <CircularProgress
                   sx={{
                     position: "absolute",
@@ -276,4 +283,6 @@ export default function AddStudentForm({ onClose }) {
 
 AddStudentForm.propTypes = {
   onClose: PropTypes.func.isRequired,
+  createNewStudent: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };

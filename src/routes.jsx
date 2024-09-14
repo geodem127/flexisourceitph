@@ -18,11 +18,11 @@ const RouteGuard = () => {
     <Routes>
       <Route exact path="/login" element={<LoginPage />} />
       <Route exact path="/" element={<AppPage />}>
-        <Route exact path="/home" element={<HomePage />} />
+        <Route exact path="/" element={<HomePage />} />
         <Route exact path="/students" element={<StudenstPage />} />
       </Route>
       <Route exact path="/404" element={<PageNotFound />} />
-      <Route exact path="*" element={<Navigate to="/404" replace />} />
+      {/* <Route exact path="*" element={<Navigate to="/404" replace />} /> */}
 
       {/* <Route exact path="/*" element={<AppPage />} /> */}
       {/* <Route exact path="/" element={<AppPage />}>

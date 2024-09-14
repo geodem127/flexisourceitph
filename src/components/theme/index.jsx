@@ -131,12 +131,12 @@ export default function ThemeProvider({ children }) {
   const theme = createTheme(themeOptions);
 
   return (
-    <StyledEngineProvider injectFirst>
-      <MUIThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </MUIThemeProvider>
-    </StyledEngineProvider>
+    // <StyledEngineProvider injectFirst>
+    <MUIThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </MUIThemeProvider>
+    // </StyledEngineProvider>
   );
 }
 

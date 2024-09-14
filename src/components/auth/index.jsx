@@ -10,7 +10,12 @@ import useLogin from "./Login";
 
 import awsconfig from "../../aws-exports";
 import { Amplify } from "aws-amplify";
-import { signOut, signIn, getCurrentUser } from "aws-amplify/auth";
+import {
+  signOut,
+  signIn,
+  getCurrentUser,
+  fetchAuthSession,
+} from "aws-amplify/auth";
 
 import "@aws-amplify/ui-react/styles.css";
 
@@ -44,16 +49,56 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, [isAuthenticated]);
 
+  const getCurrentSession = async () => {
+    try {
+      const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
+      console.log("accessToken, idToken ", {
+        accessToken,
+        idToken,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const userLogin = async (username, password) => {
     setLoading(true);
-    try {
-      const { isSignedIn, nextStep } = await signIn({ username, password });
-      console.log("userLogin isSignedIn|nextStep", { isSignedIn, nextStep });
-    } catch (error) {
-      console.log("error signing in", error);
-    }
-    authenticateUser();
-    setLoading(false);
+    // try {
+    //   const { ...res } = await signIn({
+    //     username,
+    //     password,
+    //   });
+
+    //   console.log("userLogin signInResponse", {
+    //     ...res,
+    //   });
+    // } catch (error) {
+    //   console.log("error signing in", error);
+    // }
+
+    let loginResponse = null;
+
+    await signIn({
+      username,
+      password,
+    })
+      .then((res) => {
+        loginResponse = {
+          status: "success",
+          data: { ...res },
+        };
+      })
+      .catch((err) => {
+        loginResponse = {
+          status: "failed",
+          data: err,
+        };
+      })
+      .finally(() => {
+        authenticateUser();
+        setLoading(false);
+      });
+    return loginResponse;
   };
 
   const userLogout = async () => {

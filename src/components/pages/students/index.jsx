@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -6,9 +6,15 @@ import {
   Button,
   Typography,
   Dialog,
+  IconButton,
 } from "@mui/material";
+import CachedIcon from "@mui/icons-material/Cached";
+import AddIcon from "@mui/icons-material/Add";
 import DataTable from "./DataTable";
 import AddStudentForm from "./AddStudentForm";
+import useStudents from "./useStudents";
+import LoadingButton from "../../common/LoadingButton";
+import toast from "react-hot-toast";
 const PageContainer = styled(Container)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -52,7 +58,10 @@ const ContentContainer = styled(Box)(() => ({
 
 const StudenstPage = () => {
   const [open, setOpen] = useState(false);
-
+  const [refreshInProgress, setRefreshInProgress] = useState(false);
+  const [studentRows, setStudentRows] = useState([]);
+  const { isLoading, students, getStudents, deleteStudent, createNewStudent } =
+    useStudents();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -60,6 +69,65 @@ const StudenstPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleRefresh = async () => {
+    setRefreshInProgress(true);
+    const res = await getStudents();
+    setRefreshInProgress(false);
+    if (res?.status === "success") {
+      toast.success("Latest students data has been loaded.", {
+        id: "studentIndexSuccessGetStudent",
+      });
+    }
+
+    if (res?.status === "failed") {
+      toast.error("Failed to get the list of students.", {
+        id: "studentIndexFailedGetStudent",
+      });
+    }
+  };
+
+  const handleDeleteStudent = async (id) => {
+    setRefreshInProgress(true);
+    const deleteResponse = await deleteStudent(id);
+    await getStudents();
+    setRefreshInProgress(false);
+    if (deleteResponse?.status === "success") {
+      toast.success(`Student [ ${id} ] has been deleted successfully.`);
+    }
+
+    if (deleteResponse?.status === "failed") {
+      toast.error(`Failed to delete student: ${id}`);
+    }
+  };
+
+  const handleCreateStudent = async (data) => {
+    setRefreshInProgress(true);
+    const createResponse = await createNewStudent({ ...data });
+    await getStudents();
+
+    setRefreshInProgress(false);
+    if (createResponse?.status === "success") {
+      toast.success(`Successfully created student: ${data?.id}`);
+    }
+
+    if (createResponse?.status === "failed") {
+      toast.error(`Failed to create student: ${data?.id}`);
+    }
+  };
+
+  useEffect(() => {
+    if (refreshInProgress || isLoading) return;
+    setStudentRows(students?.data);
+  }, [refreshInProgress, isLoading, students]);
+
+  useEffect(() => {
+    getStudents();
+  }, []);
+
+  useEffect(() => {
+    console.log("students: ", students);
+  }, [students]);
 
   return (
     <>
@@ -73,13 +141,32 @@ const StudenstPage = () => {
             </Box>
 
             <Box>
-              <Button variant="contained" onClick={handleClickOpen}>
-                Add Student
+              <LoadingButton
+                variant="contained"
+                startIcon={<CachedIcon />}
+                onClick={handleRefresh}
+                sx={{
+                  marginRight: ".5rem",
+                }}
+                isLoading={refreshInProgress || isLoading}
+                label="Refresh"
+              />
+
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleClickOpen}
+              >
+                Create New Student
               </Button>
             </Box>
           </ContentHeader>
           <ContentContainer>
-            <DataTable />
+            <DataTable
+              isLoading={refreshInProgress || isLoading}
+              students={studentRows}
+              deleteStudent={handleDeleteStudent}
+            />
           </ContentContainer>
         </PageWrapper>
       </PageContainer>
@@ -99,7 +186,11 @@ const StudenstPage = () => {
           },
         }}
       >
-        <AddStudentForm onClose={handleClose} />
+        <AddStudentForm
+          onClose={handleClose}
+          createNewStudent={handleCreateStudent}
+          isLoading={refreshInProgress}
+        />
       </Dialog>
     </>
   );

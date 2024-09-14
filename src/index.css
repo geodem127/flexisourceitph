@@ -26,6 +26,4 @@ body {
 #root {
   /* width: 100vw; */
   min-height: 100%;
-  outline: 3px solid green;
-  outline-offset: -3px;
 }
