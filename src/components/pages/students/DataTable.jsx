@@ -25,6 +25,12 @@ const columns = [
     minWidth: 100,
   },
   {
+    id: "createdAt",
+    label: "Date Created",
+    minWidth: 100,
+  },
+
+  {
     id: "action",
     label: "Action",
     minWidth: 150,
@@ -53,7 +59,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function DataTable({ students, deleteStudent }) {
+export default function DataTable({ students = [], deleteStudent }) {
   const theme = useTheme();
   const [page, setPage] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -89,7 +95,7 @@ export default function DataTable({ students, deleteStudent }) {
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%" }}>
         <TableContainer sx={{ minHeight: "550px", maxHeight: "550px" }}>
-          <Table aria-label="sticky table" size="small" dense table>
+          <Table aria-label="sticky table" size="small">
             <TableHead
               sx={{
                 overflow: "hidden",
@@ -98,64 +104,85 @@ export default function DataTable({ students, deleteStudent }) {
               }}
             >
               <TableRow>
-                {columns.map((column) => (
+                {columns?.map((column) => (
                   <StyledTableCell
-                    key={column.id}
-                    align={column.align}
+                    key={column?.id}
+                    align={column?.align}
                     style={{
                       top: 2,
                       left: 2,
                       right: 2,
-                      minWidth: column.minWidth,
+                      minWidth: column?.minWidth,
                     }}
                   >
-                    {column.label}
+                    {column?.label}
                   </StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody sx={{ overflow: "hidden" }}>
-              {students
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                ?.map((row, index) => (
-                  <StyledTableRow key={row?.id}>
-                    <StyledTableCell component="th" scope="row">
-                      {index + 1}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
-                      {row?.student_id}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.last_name}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.first_name}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row?.email}</StyledTableCell>
-                    <StyledTableCell align="left">{row?.dob}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      <IconButton
-                        size="small"
-                        onClick={handleOpenConfirmDialog(row?.id)}
-                      >
-                        <DeleteForeverOutlinedIcon color="error" />
-                      </IconButton>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+              {students && students.length > 0 ? (
+                students
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  ?.map((row, index) => (
+                    <StyledTableRow key={row?.id}>
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
+                      <StyledTableCell component="th" scope="row">
+                        {row?.student_id}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row?.last_name}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row?.first_name}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row?.email}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row?.dob
+                          ? new Date(row?.dob).toLocaleDateString()
+                          : ""}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row?.createdAt
+                          ? new Date(row?.createdAt).toLocaleDateString()
+                          : ""}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <IconButton
+                          size="small"
+                          onClick={handleOpenConfirmDialog(row?.id)}
+                        >
+                          <DeleteForeverOutlinedIcon color="error" />
+                        </IconButton>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    No students found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
 
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={students?.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {students && students.length > 0 && (
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={students?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
       <ConfirmationDialog
         open={confirmDialogOpen}
@@ -169,7 +196,6 @@ export default function DataTable({ students, deleteStudent }) {
 }
 
 DataTable.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  students: PropTypes.array.isRequired,
+  students: PropTypes.array,
   deleteStudent: PropTypes.func.isRequired,
 };

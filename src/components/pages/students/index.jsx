@@ -120,10 +120,6 @@ const StudenstPage = () => {
     getStudents();
   }, []);
 
-  useEffect(() => {
-    console.log("students: ", students);
-  }, [students]);
-
   return (
     <>
       <PageContainer maxWidth="lg" disableGutters>
@@ -158,7 +154,6 @@ const StudenstPage = () => {
           </ContentHeader>
           <ContentContainer>
             <DataTable
-              isLoading={refreshInProgress || isLoading}
               students={studentRows}
               deleteStudent={handleDeleteStudent}
             />
@@ -173,10 +168,9 @@ const StudenstPage = () => {
           component: "form",
           onSubmit: (event) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
+            // const formData = new FormData(event.currentTarget);
+            // const formJson = Object.fromEntries(formData.entries());
+            // const email = formJson.email;
             handleClose();
           },
         }}
