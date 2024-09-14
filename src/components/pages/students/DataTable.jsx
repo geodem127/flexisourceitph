@@ -168,6 +168,7 @@ export default function DataTable({ students = [], deleteStudent }) {
                   </TableCell>
                 </TableRow>
               )}
+
             </TableBody>
           </Table>
         </TableContainer>
