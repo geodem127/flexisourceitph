@@ -62,7 +62,7 @@ let TEST_DATA = `
 720 1440`;
 
 const CodingChallengePage = () => {
-  const [inputValue, setInputValue] = React.useState(TEST_DATA);
+  const [inputValue, setInputValue] = React.useState(TEST_DATA.trim());
   const [outputValue, setOutputValue] = React.useState("");
 
   const handleClear = () => {
@@ -71,7 +71,7 @@ const CodingChallengePage = () => {
   };
 
   const handleReset = () => {
-    setInputValue(TEST_DATA);
+    setInputValue(TEST_DATA.trim());
     setOutputValue("");
   };
 
