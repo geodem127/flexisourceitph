@@ -5,7 +5,6 @@ import { CssBaseline } from "@mui/material";
 import {
   ThemeProvider as MUIThemeProvider,
   createTheme,
-  StyledEngineProvider,
 } from "@mui/material/styles";
 
 const FONT_PRIMARY = `'Source Sans Pro', Roboto, Helvetica, sans-serif`;

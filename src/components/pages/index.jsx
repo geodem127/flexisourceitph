@@ -1,12 +1,10 @@
-import { useEffect } from "react";
 import { PropTypes } from "prop-types";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
-import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Navigate, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { alpha, Button, Divider, styled } from "@mui/material";
 import { Toaster } from "react-hot-toast";
 import LoadingButton from "../common/LoadingButton";
@@ -20,7 +18,6 @@ const NavLinkWrapper = styled(Box)(() => ({
   justifyContent: "flex-start",
   alignItems: "flex-start",
   padding: "4rem 0",
-  //   rowGap: "1rem",
   position: "relative",
 }));
 
@@ -38,13 +35,11 @@ const NavLinkButton = styled(Button)(({ theme }) => ({
   "&.active": {
     background: alpha(theme.palette.primary.main, 0.2),
   },
-  //   background: "transparent",
 }));
 
 const PageLayout = ({ children }) => {
   const location = useLocation();
   const { userLogout, loading } = useAuthentication();
-  //   if (location?.pathname === "/") return <Navigate to="/home" />;
   return (
     <>
       <Box sx={{ display: "flex" }}>

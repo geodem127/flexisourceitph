@@ -15,8 +15,6 @@ body {
   margin: 0;
   padding: 0;
   background: rgb(243, 244, 245);
-  /* width: 100vw;
-  min-height: 100vh; */
 }
 
 * {
@@ -24,6 +22,5 @@ body {
 }
 
 #root {
-  /* width: 100vw; */
   min-height: 100%;
 }

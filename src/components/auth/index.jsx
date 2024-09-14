@@ -6,7 +6,6 @@ import {
   useCallback,
 } from "react";
 import PropTypes from "prop-types";
-import useLogin from "./Login";
 
 import awsconfig from "../../aws-exports";
 import { Amplify } from "aws-amplify";
@@ -102,13 +101,14 @@ const AuthProvider = ({ children }) => {
   };
 
   const userLogout = async () => {
+    setLoading(true);
     try {
       await signOut({ global: true });
     } catch (error) {
       console.log("error signing out: ", error);
     }
     authenticateUser();
-    //   destroyAuth();
+    setLoading(false);
   };
 
   const destroyAuth = () => {
@@ -144,7 +144,7 @@ const AuthProvider = ({ children }) => {
       value={{
         loading,
         isAuthenticated,
-        // user,
+        user,
         userLogin,
         userLogout,
       }}

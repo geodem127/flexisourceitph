@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PropTypes } from "prop-types";
 import {
   Box,
@@ -17,8 +17,6 @@ import { useFormik, Form, FormikProvider } from "formik";
 
 import * as Yup from "yup";
 import { generateUUID } from "../../../utils/uuidGenerator";
-// import useStudents from "./useStudents";
-// import toast from "react-hot-toast";
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -78,9 +76,6 @@ export default function AddStudentForm({
   const [dateError, setDateError] = useState("");
   const studentUUID = generateUUID();
 
-  //   const { isLoading, createNewStudentResponse, getStudents, createNewStudent } =
-  //     useStudents();
-
   const formik = useFormik({
     initialValues: {
       student_id: "",
@@ -113,21 +108,6 @@ export default function AddStudentForm({
     if (hasFormikError && !dateIsValid) return setDateError(formik.errors.dob);
     setDateError("");
   };
-
-  //   useEffect(() => {
-  //     console.log(" API.graphql RESPONSE: ", createNewStudentResponse);
-  //     if (isLoading) return;
-
-  //     if (createNewStudentResponse?.status === "success") {
-  //       toast.success(
-  //         `Successfully created student: ${createNewStudentResponse?.data?.id}`
-  //       );
-  //     }
-
-  //     if (createNewStudentResponse?.status === "failed") {
-  //       toast.error(`Failed to create student`);
-  //     }
-  //   }, [createNewStudentResponse, isLoading]);
 
   return (
     <FormContainer>

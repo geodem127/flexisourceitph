@@ -6,7 +6,6 @@ import {
   Button,
   Typography,
   Dialog,
-  IconButton,
 } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,9 +21,6 @@ const PageContainer = styled(Container)(({ theme }) => ({
   alignItems: "stretch",
   position: "relative",
 
-  //   outlineOffset: "-5px",
-  //   width: "100%",
-  //   overflow: "scroll",
   minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight + 10}px)`,
 }));
 
@@ -35,7 +31,6 @@ const PageWrapper = styled(Box)(() => ({
   alignItems: "stretch",
   position: "relative",
   padding: "1rem 0",
-  //   height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
 }));
 const ContentHeader = styled(Box)(() => ({
   display: "flex",
@@ -52,7 +47,7 @@ const ContentContainer = styled(Box)(() => ({
   justifyContent: "flex-start",
   alignItems: "flex-start",
   position: "relative",
-  //   height: "50px",
+
   flexGrow: 1,
 }));
 

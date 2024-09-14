@@ -7,9 +7,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Paper, styled } from "@mui/material";
+import { styled } from "@mui/material";
 
-const DialogStyles = styled(Dialog)(({ theme }) => ({
+const DialogStyles = styled(Dialog)(() => ({
   "& .MuiPaper-root": {
     width: "300px",
     height: "200px",

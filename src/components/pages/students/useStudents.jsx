@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { generateClient } from "aws-amplify/api";
 import { createStudents, deleteStudents } from "../../../graphql/mutations";
 import { listStudents } from "../../../graphql/queries";
