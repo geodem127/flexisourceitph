@@ -17,6 +17,12 @@
       },
       "api": {
         "flexisourceitph": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2b36m5b88w912",
+          "type": "manual"
+        }
       }
     }
   }
