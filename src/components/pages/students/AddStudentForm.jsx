@@ -21,8 +21,10 @@ import { generateUUID } from "../../../utils/uuidGenerator";
 const FormContainer = styled(Paper)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  alignItems: "flex-start",
+  justifyContent: "flex-start",
+  alignItems: "stretch",
 
+  width: "600px",
   padding: theme.spacing(5),
   "& .formRow": {
     display: "flex",
@@ -31,9 +33,17 @@ const FormContainer = styled(Paper)(({ theme }) => ({
     alignItems: "center",
     width: "100%",
     padding: ".5rem 0 1.5rem 0",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+      rowGap: "1rem",
+      padding: ".5rem 0 1.5rem 0",
+    },
   },
   "& .formCol": {
-    width: "300px",
+    flexGrow: 1,
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
   },
   "& .formAction": {
     display: "flex",
@@ -240,7 +250,7 @@ export default function AddStudentForm({
             component="div"
             color="error"
             mt={1}
-            sx={{ border: "0 solid red", minHeight: "3rem" }}
+            sx={{ minHeight: "3rem" }}
           >
             {submitError}
           </Typography>

@@ -10,30 +10,30 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
-import { Box, IconButton, styled, useTheme } from "@mui/material";
+import { Box, IconButton, Skeleton, styled, useTheme } from "@mui/material";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 50 },
-  { id: "student_id", label: "Student ID", minWidth: 100 },
-  { id: "last_name", label: "Last Name", minWidth: 170 },
-  { id: "first_name", label: "First Name", minWidth: 170 },
-  { id: "email", label: "Email", minWidth: 170 },
+  // { id: "student_id", label: "Student ID", minWidth: 100 },
+  { id: "last_name", label: "Last Name", minWidth: 100 },
+  { id: "first_name", label: "First Name", minWidth: 100 },
+  { id: "email", label: "Email", minWidth: 100 },
   {
     id: "dob",
     label: "Date of Birth",
-    minWidth: 100,
+    minWidth: 80,
   },
-  {
-    id: "createdAt",
-    label: "Date Created",
-    minWidth: 100,
-  },
+  // {
+  //   id: "createdAt",
+  //   label: "Date Created",
+  //   minWidth: 100,
+  // },
 
   {
     id: "action",
     label: "Action",
-    minWidth: 150,
+    minWidth: 100,
     align: "center",
   },
 ];
@@ -58,6 +58,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+const tableLoadingSkeleton = (rows, columns) => {
+  return (
+    <>
+      {[...new Array(rows)].map((rowIndex) => (
+        <StyledTableRow key={rowIndex}>
+          {[...new Array(columns)].map((colIndex) => (
+            <StyledTableCell key={colIndex}>
+              <Skeleton animation="wave" />
+            </StyledTableCell>
+          ))}
+        </StyledTableRow>
+      ))}
+    </>
+  );
+};
 
 export default function DataTable({ students = [], deleteStudent }) {
   const theme = useTheme();
@@ -92,10 +108,10 @@ export default function DataTable({ students = [], deleteStudent }) {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box mt={2} sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%" }}>
-        <TableContainer sx={{ minHeight: "550px", maxHeight: "550px" }}>
-          <Table aria-label="sticky table" size="small">
+        <TableContainer sx={{ width: "100%" }}>
+          <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead
               sx={{
                 overflow: "hidden",
@@ -121,69 +137,63 @@ export default function DataTable({ students = [], deleteStudent }) {
               </TableRow>
             </TableHead>
             <TableBody sx={{ overflow: "hidden" }}>
-              {students && students.length > 0 ? (
-                students
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  ?.map((row, index) => (
-                    <StyledTableRow key={row?.id}>
-                      <StyledTableCell component="th" scope="row">
-                        {index + 1}
-                      </StyledTableCell>
-                      <StyledTableCell component="th" scope="row">
+              {students && students.length > 0
+                ? students
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    ?.map((row, index) => (
+                      <StyledTableRow key={row?.id}>
+                        <StyledTableCell component="th" scope="row">
+                          {index + 1 + page * rowsPerPage}
+                        </StyledTableCell>
+                        {/* <StyledTableCell component="th" scope="row">
                         {row?.student_id}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row?.last_name}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row?.first_name}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row?.email}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row?.dob
-                          ? new Date(row?.dob).toLocaleDateString()
-                          : ""}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
+                      </StyledTableCell> */}
+                        <StyledTableCell align="left">
+                          {row?.last_name}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row?.first_name}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row?.email}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row?.dob
+                            ? new Date(row?.dob).toLocaleDateString()
+                            : ""}
+                        </StyledTableCell>
+                        {/* <StyledTableCell align="left">
                         {row?.createdAt
                           ? new Date(row?.createdAt).toLocaleDateString()
                           : ""}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        <IconButton
-                          size="small"
-                          onClick={handleOpenConfirmDialog(row?.id)}
-                        >
-                          <DeleteForeverOutlinedIcon color="error" />
-                        </IconButton>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} align="center">
-                    No students found
-                  </TableCell>
-                </TableRow>
-              )}
-
+                      </StyledTableCell> */}
+                        <StyledTableCell align="center">
+                          <IconButton
+                            size="small"
+                            onClick={handleOpenConfirmDialog(row?.id)}
+                          >
+                            <DeleteForeverOutlinedIcon color="error" />
+                          </IconButton>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))
+                : tableLoadingSkeleton(6, columns.length)}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {students && students.length > 0 && (
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={students?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        )}
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={students && students.length <= 0 ? 0 : students?.length}
+          rowsPerPage={students && students.length <= 0 ? 10 : rowsPerPage}
+          page={students && students.length <= 0 ? 1 : page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
       <ConfirmationDialog
         open={confirmDialogOpen}

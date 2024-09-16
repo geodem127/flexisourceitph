@@ -14,7 +14,7 @@ import AddStudentForm from "./AddStudentForm";
 import useStudents from "./useStudents";
 import LoadingButton from "../../common/LoadingButton";
 import toast from "react-hot-toast";
-const PageContainer = styled(Container)(({ theme }) => ({
+const PageContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
@@ -22,6 +22,7 @@ const PageContainer = styled(Container)(({ theme }) => ({
   position: "relative",
 
   minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight + 10}px)`,
+  width: "100%",
 }));
 
 const PageWrapper = styled(Box)(() => ({
@@ -47,7 +48,8 @@ const ContentContainer = styled(Box)(() => ({
   justifyContent: "flex-start",
   alignItems: "flex-start",
   position: "relative",
-
+  maxWidth: "100%",
+  overflow: "hidden",
   flexGrow: 1,
 }));
 
@@ -122,7 +124,7 @@ const StudenstPage = () => {
 
   return (
     <>
-      <PageContainer maxWidth="lg" disableGutters>
+      <PageContainer>
         <PageWrapper>
           <ContentHeader>
             <Box>
@@ -162,15 +164,12 @@ const StudenstPage = () => {
       </PageContainer>
       <Dialog
         open={open}
-        onClose={handleClose}
         maxWidth="lg"
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
             event.preventDefault();
-            // const formData = new FormData(event.currentTarget);
-            // const formJson = Object.fromEntries(formData.entries());
-            // const email = formJson.email;
+
             handleClose();
           },
         }}

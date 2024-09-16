@@ -20,7 +20,7 @@ const PageWrapper = styled(Box)(() => ({
 
 const HomePage = () => {
   return (
-    <PageContainer maxWidth="lg" disableGutters>
+    <PageContainer>
       <PageWrapper>HOME</PageWrapper>
     </PageContainer>
   );

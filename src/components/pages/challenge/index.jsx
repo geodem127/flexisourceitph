@@ -2,14 +2,13 @@ import React from "react";
 import {
   Box,
   Button,
-  Container,
   Paper,
   styled,
   TextField,
   Typography,
 } from "@mui/material";
 
-const PageContainer = styled(Container)(({ theme }) => ({
+const PageContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
@@ -25,10 +24,10 @@ const PageWrapper = styled(Box)(() => ({
   alignItems: "stretch",
   position: "relative",
   padding: "1rem 0",
+  maxWidth: "100%",
 }));
 
 const BoxWrapper = styled(Paper)(() => ({
-  //   border: "5px solid red",
   height: "100%",
   padding: "1rem",
   display: "flex",
@@ -37,7 +36,7 @@ const BoxWrapper = styled(Paper)(() => ({
   alignItems: "flex-start",
   flexGrow: 1,
   flexShrink: 0,
-  width: "50%",
+  width: "45%",
   whiteSpace: "pre-wrap",
 }));
 
@@ -84,12 +83,11 @@ const CodingChallengePage = () => {
   };
 
   return (
-    <PageContainer maxWidth="lg" disableGutters>
+    <PageContainer>
       <PageWrapper>
         <Typography variant="h4">Coding Challenge</Typography>
         <Box
           sx={{
-            // border: "1px solid red",
             height: "80vh",
             minHeight: "40vh",
             display: "flex",
