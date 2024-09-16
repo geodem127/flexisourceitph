@@ -7,6 +7,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+// import "./codeMirror.css";
+import "./monokai.css";
+import { SCRIPT_CODE } from "./scriptData";
 
 const PageContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -36,8 +39,55 @@ const BoxWrapper = styled(Paper)(() => ({
   alignItems: "flex-start",
   flexGrow: 1,
   flexShrink: 0,
-  width: "45%",
+
   whiteSpace: "pre-wrap",
+  position: "relative",
+  overflow: "hidden",
+}));
+
+const CodeWrapper = styled("code")(() => ({
+  borderColor: "#353737",
+  borderStyle: "solid",
+  borderTopWidth: "17px",
+  borderLeftWidth: "17px",
+  background: "#131313",
+  color: "#c9c7c7",
+  height: "100%",
+  width: "100%",
+  overflow: "scroll",
+  position: "relative",
+  left: 0,
+  top: 0,
+  padding: "0",
+  fontSize: ".75rem",
+  paddingLeft: "1.25rem",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
+  alignItems: "flex-start",
+  "& > *": {
+    width: "100%",
+    height: "1.25rem",
+    lineHeight: "1.25rem",
+    padding: 0,
+    margin: 0,
+    flexGrow: 0,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  "& .CodeMirror-gutter-wrapper": {
+    marginTop: "-1.25rem",
+    marginLeft: "-1rem",
+    padding: 0,
+    width: "2rem",
+    lineHeight: "1.25rem",
+    fontWeight: "bold",
+    "& .CodeMirror-linenumber": {
+      color: "#696868",
+    },
+  },
 }));
 
 let TEST_DATA = `
@@ -73,6 +123,14 @@ const CodingChallengePage = () => {
     setInputValue(TEST_DATA.trim());
     setOutputValue("");
   };
+  const handleViewCode = () => {
+    setOutputValue(
+      <CodeWrapper
+        className=" cm-s-monokai"
+        dangerouslySetInnerHTML={{ __html: SCRIPT_CODE.trim() }}
+      />
+    );
+  };
 
   const handleRun = () => {
     const cleanInputValue = inputValue.trim();
@@ -97,7 +155,7 @@ const CodingChallengePage = () => {
             columnGap: 2,
           }}
         >
-          <BoxWrapper>
+          <BoxWrapper sx={{ width: "30%" }}>
             <TextField
               fullWidth
               multiline
@@ -118,15 +176,18 @@ const CodingChallengePage = () => {
               <Button variant="contained" color="error" onClick={handleClear}>
                 Clear
               </Button>
-              <Button variant="contained" color="info" onClick={handleReset}>
+              <Button variant="contained" color="warning" onClick={handleReset}>
                 Reset
+              </Button>
+              <Button variant="contained" color="info" onClick={handleViewCode}>
+                Code
               </Button>
               <Button variant="contained" color="primary" onClick={handleRun}>
                 Run
               </Button>
             </Box>
           </BoxWrapper>
-          <BoxWrapper>{outputValue}</BoxWrapper>
+          <BoxWrapper sx={{ width: "60%" }}>{outputValue}</BoxWrapper>
         </Box>
       </PageWrapper>
     </PageContainer>
