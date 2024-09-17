@@ -6,6 +6,8 @@ import {
   styled,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 const PageContainer = styled(Box)(({ theme }) => ({
@@ -14,7 +16,7 @@ const PageContainer = styled(Box)(({ theme }) => ({
   justifyContent: "flex-start",
   alignItems: "stretch",
   position: "relative",
-  minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight + 10}px)`,
+  minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight + 500}px)`,
 }));
 
 const PageWrapper = styled(Box)(() => ({
@@ -27,7 +29,7 @@ const PageWrapper = styled(Box)(() => ({
   maxWidth: "100%",
 }));
 
-const BoxWrapper = styled(Paper)(() => ({
+const BoxWrapper = styled(Paper)(({ theme }) => ({
   height: "100%",
   padding: "1rem",
   display: "flex",
@@ -37,6 +39,10 @@ const BoxWrapper = styled(Paper)(() => ({
   flexGrow: 1,
   flexShrink: 0,
   width: "45%",
+  [theme.breakpoints.down("md")]: {
+    width: "100%",
+    margin: "1rem 0",
+  },
   whiteSpace: "pre-wrap",
 }));
 
@@ -61,6 +67,8 @@ let TEST_DATA = `
 720 1440`;
 
 const CodingChallengePage = () => {
+  const theme = useTheme();
+  const mdScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [inputValue, setInputValue] = React.useState(TEST_DATA.trim());
   const [outputValue, setOutputValue] = React.useState("");
 
@@ -88,10 +96,10 @@ const CodingChallengePage = () => {
         <Typography variant="h4">Coding Challenge</Typography>
         <Box
           sx={{
-            height: "80vh",
-            minHeight: "40vh",
+            height: "75vh",
+            minHeight: "30vh",
             display: "flex",
-            flexDirection: "row",
+            flexDirection: mdScreen ? "column" : "row",
             justifyContent: "space-between",
             alignItems: "flex-start",
             columnGap: 2,

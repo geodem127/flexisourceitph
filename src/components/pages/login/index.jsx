@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Paper, TextField, Typography } from "@mui/material";
+import {
+  Container,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 import { useFormik, Form, FormikProvider } from "formik";
 
@@ -14,6 +21,8 @@ const LoginFormSchema = Yup.object({
 });
 
 const LoginPage = () => {
+  const theme = useTheme();
+  const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [errorMessage, setErrorMessage] = React.useState("");
   const { isAuthenticated, userLogin, loading } = useAuthentication();
 
@@ -71,16 +80,19 @@ const LoginPage = () => {
           <Paper
             elevation={3}
             sx={{
-              width: "500px",
+              width: smScreen ? "calc(100vw - 2rem)" : "500px",
 
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
               alignItems: "stretch",
               rowGap: "2rem",
-              padding: "5rem",
+              padding: smScreen ? "3rem 2rem 3rem 2rem" : "5rem",
             }}
           >
+            <Typography variant="h3" component="h3" gutterBottom>
+              Login
+            </Typography>
             <TextField
               id="username"
               name="username"

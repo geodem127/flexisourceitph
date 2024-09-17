@@ -14,7 +14,7 @@ const LoadingButton = ({ isLoading = false, label = "", ...other }) => {
           }}
         />
       )}
-      {label || "Submit"}
+      {label || ""}
     </Button>
   );
 };

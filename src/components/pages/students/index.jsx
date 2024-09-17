@@ -6,6 +6,8 @@ import {
   Button,
   Typography,
   Dialog,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import AddIcon from "@mui/icons-material/Add";
@@ -54,6 +56,8 @@ const ContentContainer = styled(Box)(() => ({
 }));
 
 const StudenstPage = () => {
+  const theme = useTheme();
+  const smScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false);
   const [refreshInProgress, setRefreshInProgress] = useState(false);
   const [studentRows, setStudentRows] = useState([]);
@@ -142,7 +146,7 @@ const StudenstPage = () => {
                   marginRight: ".5rem",
                 }}
                 isLoading={refreshInProgress || isLoading}
-                label="Refresh"
+                label={smScreen ? "" : "Refresh"}
               />
 
               <Button
@@ -150,7 +154,7 @@ const StudenstPage = () => {
                 startIcon={<AddIcon />}
                 onClick={handleClickOpen}
               >
-                Create New Student
+                {smScreen ? "" : "Create New Student"}
               </Button>
             </Box>
           </ContentHeader>

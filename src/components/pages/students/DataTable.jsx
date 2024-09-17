@@ -111,7 +111,7 @@ export default function DataTable({ students = [], deleteStudent }) {
     <Box mt={2} sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%" }}>
         <TableContainer sx={{ width: "100%" }}>
-          <Table stickyHeader aria-label="sticky table" size="small">
+          <Table aria-label="sticky table" size="small">
             <TableHead
               sx={{
                 overflow: "hidden",
